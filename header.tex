@@ -1,0 +1,10 @@
+\usepackage{fontspec}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\geometry{margin=1in}
+\let\originAlParaGraph\paragraph
+\renewcommand{\paragraph}[1]{\originAlParaGraph{#1} \hfill}
+
