@@ -491,20 +491,394 @@ Due altri indicatori della dispersione di un insieme di dati frequentemente util
 
 ### **Scarto interquantile**
 
-Lo scarto interquantile
+Lo scarto interquantile è un indice di dispersione che deriva dalla mediana campionaria, e rappresenta la lunghezza dell'intervallo in cui si trova la metà centrale dei dati. Richiamando i quartili, possiamo dire che si tratta della lunghezza dell'intervallo compreso tra il primo quartile Q1 e il terzo quartile Q3.
+
+Un IQR piccolo indica che la metà centrale dei dati è relativamente concentrata attorno alla mediana, mentre un IQR ampio suggerisce una maggiore dispersione nella parte centrale della distribuzione.
+
+l'IQR è un indice robusto poichè non è influenzato da valori fuori scala, come la mediana campionaria. Questo lo rende particolarmente utile quando la distribuzione dei dati è asimmetrica o contiene anomalie.
+
+Questo indice è fondamentale per la costruzione dei boxplot perchè viene utilizzato per definire quali valori siano fuori scala e quali no. Generalmente i valori inferiori a $Q1 - 1.5 \cdot IQR$ o superiori a $Q3 + 1.5 \cdot IQR$ sono considerati outlier.
 
 ## **Altri grafici**
 ### **Box Plot**
 
+Se vogliamo visualizzare alcune statistiche riassuntive di un insieme di dati usiamo un **box plot** (diagramma a scatola). Per realizzarlo tracciamo un segmento orizzontale dal minore al maggiore dei dati. A questo segmento sovrapponiamo un rettangolo che si estende dal primo al terzo quartile. Il rettangolo è diviso in due parti da un segmento verticale in corrispondenza della mediana campionaria.
+
+La lunghezza della base del rettangolo corrisponde allo scarto interquantile.
+```{=latex}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=2.8cm,
+    xmin=0, xmax=10,
+    ymin=0.5, ymax=1.5,
+    axis x line=none,
+    axis y line=none,
+    boxplot/draw direction=x,
+    clip=false,
+]
+  % box plot
+  \addplot+[
+    boxplot prepared={
+      lower whisker=1,
+      lower quartile=2,
+      median=3.5,
+      upper quartile=5.8,
+      upper whisker=8,
+    },
+    thick,
+    draw=black,
+    fill=white,
+  ] coordinates {};
+
+  % outliers
+  \addplot+[
+    only marks,
+    mark=o,
+    mark options={draw=black, line width=0.8pt},
+  ] coordinates {(9.3,1) (11,1)};
+
+  % etichette
+  \node[above, yshift=0.6cm] at (axis cs:1,1) {Min};
+  \node[above, yshift=0.55cm] at (axis cs:2,1) {Q1};
+  \node[above, yshift=0.6cm] at (axis cs:3.5,1) {Med};
+  \node[above, yshift=0.55cm] at (axis cs:5.8,1) {Q3};
+  \node[above, yshift=0.6cm] at (axis cs:8,1) {Max};
+
+  % frecce
+  \draw[<->, thick, gray]
+    (axis cs:1.1,0.4) -- (axis cs:1.9,0.4)
+    node[midway,below, text=gray]{25\%};
+  \draw[<->, thick, gray]
+    (axis cs:2.1,0.4) -- (axis cs:3.4,0.4)
+    node[midway,below, text=gray]{25\%};
+  \draw[<->, thick, gray]
+    (axis cs:3.6,0.4) -- (axis cs:5.7,0.4)
+    node[midway,below, text=gray]{25\%};
+  \draw[<->, thick, gray]
+    (axis cs:5.9,0.4) -- (axis cs:7.9,0.4)
+    node[midway,below, text=gray]{25\%};
+
+\end{axis}
+\end{tikzpicture}
+```
+In un box plot ciascuno dei quattro segmenti contiene il 25% delle osservazioni, però la lunghezza di ciascun segmento sulla scala orizzontale dipende dalla distribuzione dei valori. Se i dati sono più concentrati in un certo intervallo, quel tratto sarà più corto. I quartili dividono le osservazioni in parti uguali sul numero dei dati ma non sulla distanza numerica.
+
+I pallini a destra del blox plot rappresentano dei valori fuori scala, determinati tramite l'utilizzo dell'IQR.
+
 ### **Q-Q Plot**
+```{=latex}
+\begin{minipage}[c]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{\detokenize{./immagini/qq-plot.png}}
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[c]{0.65\textwidth}
+    \vspace{-7mm}
+Un diagramma Q-Q, o diagramma qauntile-quantile, è una rappresentazione grafica qualitativa che permette di verificare le similarità tra le distribuzioni di due campioni diversi. Può tornare utile per vedere quindi se seguono una stessa distribuzione. \\\\ 
+Questi diagrammi si basano sul fatto che i quantili campionari rappresentino l'approssimazione di quantili teorici, se considerati tutti insieme, individuano la distribuzione dei dati.
+\end{minipage}
+```
+Ogni asse cartesiano di questo diagramma contiene i quantili dei due campioni presi in considerazione. Poichè i quantili sono ordinati in modo creascente anche il grafico lo sarà, o perlomeno non decrescente.
+
+Se due campioni hanno una distribuzione uguale, allora estraendo da entrambi il quantile di un livello fissato si dovranno ottenere due numeri vicini. In questo caso i punti del diagramma Q-Q tenderanno ad allinearsi alla bisettrice del I° e III° quadrante.
 
 ## **Distribuzioni normali**
 
+Un insieme di dati si dice **normale** se il rispettivo istogramma ha le seguenti proprietà:
+
+- L'istogramma è simmetrico rispetto all'intervallo centrale.
+- Ha il punto massimo in corrispondenza dell'intervallo centrale.
+- Spostandoci dal centro verso destra o sinistra, l'altezza diminuisce in modo tale che l'intero istogramma è a forma di campana.
+
+Se l'istogramma di un insieme di dati è vicino ad essere un istrogramma normale, allora diciamo che l'insieme di dati è approssimativamente normale. Inoltre l'insieme di dati si dice asimmetrico a destra o a sinistra a seconda di quale sia la coda più lunga.
+
+A causa della simmetria dell'istogramma normale, la media e la mediana di un insieme di dati approssimativamente normale sono uguali o molto prossime.
+
+Siano $\bar{x}$ e $s$ rispettivamente la media e la deviazione standard campionarie di un insieme di dati approssivativamente normale. La **regola empirica** specifica le proporzioni approssimate delle osservazioni che si trovano a una distanza di $s, 2s$ e $3s$ da $\bar{x}$:
+
+- circa il 68% delle osservazioni rientrano nell'intervallo $\bar{x} \pm s$
+- circa il 95% delle osservazioni rientrano nell'intervallo $\bar{x} \pm 2s$
+- circa il 99,7% delle osservazioni rientrano nell'intervallo $\bar{x} \pm 3s$
+
+Un insieme di dati ottenuto campionando una popolazione costituita da sottogruppi eterogenei non è di solito normale. L'istogramma di un insieme di dati di questo tipo spesso assomiglia ad una sovrapposizione di istogrammi normali e quindi spesso ha due o più massimi locali. Questi massimi locali si comportano come mode. Un insieme di dati il cui istogramma ha due massimi locali si dice **bimodale**.
+
+In questi casi, quando nei dati si hanno due popolazioni ben distinte per quanto riguarda un certo attributo, ha senso dividere i dati in base a queste popolazioni e ottenere un insieme normale.
+
 ## **Indici di dipendenza**
+
+Consideriamo un insieme composto da dati accoppiati $(x_1,y_1),(x_2, y_2), \cdots, (x_n, y_n)$. Per vedere la relazione relativa di queste due variabili è possibile rappresentarle in un diagramma di dispersione. Questo approccio è pero qualitativo e quindi soggetto a interpretazione.
+Vogliamo trovare un indice quantitativo in grado di rappresentare questa relazione oggettivamente. Questi indici sono detti di dipendenza o associazione e misurano la forza della relazione, ossia forniscono un valore numerico che indica quanto intensamente le variabili siano collegate.
 
 ### **Covarianza campionaria**
 
+La **covarianza campionaria** è una statistica che quantifica in che misura grandi valori di $x$ corrispondano a grandi valori di $y$ e piccoli valori di $x$ a piccoli valori di $y$. Questo indice quindi misura la tendenza con cui due variabili si muovono insieme ed è definita come la media dei prodotti degli scostamenti delle variabili dalle loro medie.
+
+#### **Relazione tendenziale**
+
+Procediamo considerando una **relazione** di tipo **tendenziale** e non deterministico. Ciò significa che le affermazioni che seguiranno varrano tendenzialmente sempre: ci saranno quindi delle eccezioni ma per lo più saranno valide.
+
+Si supponga che un insieme sia composto dalle coppie di valori $(x_i, y_i)$ con $i = 1, \cdots, n$ e calcolando le rispettive medie campionarie $\bar{x}$ e $\bar{y}$. Per la i-esima coppia di dati, consideriamo $(x_i - \bar{x})$ e $(y_i - \bar{y})$ cioè gli scarti dei valori $x,y$ rispetto alla loro media campionaria.
+
+Possiamo notare che quando grandi valori di *x* tendono ad essere associati a grandi valori di *y*, e piccoli valori di *x* tendono ad essere associati a piccoli valori di *y*, allora i segni (positivi o negativi) di $(x_i - \bar{x})$ e $(y_i - \bar{y})$ tenderanno a essere gli stessi. Quindi se gli scarti hanno segno concorde, il loro prodotto $(x_i - \bar{x})(y_i - \bar{y})$ sarà positivo. Otteniamo che la sommatoria $\sum^n_{i=1} (x_i - \bar{x})(y_i - \bar{y})$ tenderà ad essere un grande numero positivo.
+```{=latex}
+\vspace{2.5mm}
+\begin{minipage}[c]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{\detokenize{./immagini/rel-diretta}}
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[c]{0.325\textwidth}
+    \vspace{0mm}
+    \begin{tabular}{ccc}
+    x "grande" & e & y "grande" \\
+    $x \ge \bar{x}$ &  & $y \ge \bar{y}$ \\
+    $(x_i - \bar{x}) \ge 0$ &  & $(y_i - \bar{y}) \ge 0$ \\[2ex]
+    \multicolumn{3}{c}{\text{Tendenzialmente:}} \\[1mm]
+    \multicolumn{3}{c}{$(x_i - \bar{x})(y_i - \bar{y}) \ge 0$} \\[1mm]
+    \multicolumn{3}{c}{$\displaystyle\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) > 0$}
+    \end{tabular}
+\end{minipage}
+\begin{minipage}[c]{0.01\textwidth}
+    \centering
+    \vrule width 0.5pt height 2.85cm
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[c]{0.325\textwidth}
+    \vspace{0mm}
+    \begin{tabular}{ccc}
+    x "piccolo" & e & y "piccolo" \\
+    $x < \bar{x}$ &  & $y < \bar{y}$ \\
+    $(x_i - \bar{x}) < 0$ &  & $(y_i - \bar{y}) < 0$ \\[2ex]
+    \multicolumn{3}{c}{\text{Tendenzialmente:}} \\[1mm]
+    \multicolumn{3}{c}{$(x_i - \bar{x})(y_i - \bar{y}) \ge 0$} \\[1mm]
+    \multicolumn{3}{c}{$\displaystyle\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) > 0$}
+    \end{tabular}
+\end{minipage}
+
+\vspace{1mm}
+\begin{center}
+	\begin{minipage}[c]{0.9\textwidth}
+		Si individua quindi una correlazione positiva tra le due variabili poiché tendenzialmente presentano segno concorde. In questo caso si parla di relazione tra le due variabili di tipo diretta.
+	\end{minipage}
+\end{center}
+\vspace{3mm}
+```
+
+Per lo stesso motivo, quando grandi valori di una variabile tendono a verificarsi in corrispondenza a piccoli valori dell'altra, allora i segni di $(x_i - \bar{x})$ e $(y_i - \bar{y})$ saranno discordi e quindi la sommatoria $\sum^n_{i=1} (x_i - \bar{x})(y_i - \bar{y})$ tenderà ad essere un grande numero negativo.  
+
+```{=latex}
+\vspace{2.5mm}
+\begin{minipage}[c]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{\detokenize{./immagini/rel-indiretta}}
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[c]{0.325\textwidth}
+    \vspace{0mm}
+    \begin{tabular}{ccc}
+    x "grande" & e & y "piccola" \\
+    $x \ge \bar{x}$ &  & $y < \bar{y}$ \\
+    $(x_i - \bar{x}) \ge 0$ &  & $(y_i - \bar{y}) < 0$ \\[2ex]
+    \multicolumn{3}{c}{\text{Tendenzialmente:}} \\[1mm]
+    \multicolumn{3}{c}{$(x_i - \bar{x})(y_i - \bar{y}) < 0$} \\[1mm]
+    \multicolumn{3}{c}{$\displaystyle\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) < 0$}
+    \end{tabular}
+\end{minipage}
+\begin{minipage}[c]{0.01\textwidth}
+    \centering
+    \vrule width 0.5pt height 2.85cm
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[c]{0.325\textwidth}
+    \vspace{0mm}
+    \begin{tabular}{ccc}
+    x "piccolo" & e & y "grande" \\
+    $x < \bar{x}$ &  & $y \ge \bar{y}$ \\
+    $(x_i - \bar{x}) < 0$ &  & $(y_i - \bar{y}) \ge 0$ \\[2ex]
+    \multicolumn{3}{c}{\text{Tendenzialmente:}} \\[1mm]
+    \multicolumn{3}{c}{$(x_i - \bar{x})(y_i - \bar{y}) < 0$} \\[1mm]
+    \multicolumn{3}{c}{$\displaystyle\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) < 0$}
+    \end{tabular}
+\end{minipage}
+
+\vspace{1mm}
+\begin{center}
+	\begin{minipage}[c]{0.9\textwidth}
+		Si individua quindi una correlazione negativa tra le due variabili poiché tendenzialmente presentano segno discorde. In questo caso si parla di relazione tra le due variabili di tipo indiretta.
+	\end{minipage}
+\end{center}
+\vspace{3mm}
+```
+Andiamo ad standardizzare la sommatoria dividendo per n-1, al fine di evitare che questo indice assuma valori troppo elevati. Possiamo osservare che la formula della covarianza campionaria e riconducibile a quella della varianza campionaria, motivo per il quale si possa intuire perchè si vada a dividere per n-1 e non direttamente per il numero totale di osservazioni (*correzzione sottostima*).
+
+Infine possiamo definire la covarianza campionaria come:
+$$
+\dfrac{\displaystyle \sum^n_{i=1} (x_i - \bar{x})(y_i - \bar{y})}{n-1} = 
+\begin{cases}
+> 0 & \text{relazione diretta} \\
+\approx 0 & \text{assenza di relazione / indipendenza} \\
+< 0 & \text{relazione indiretta / inversa}
+\end{cases}
+$$
+
 ### **Coefficiente di correlazione di Pearson**
+
+La covarianza campionaria non può essere posizionata all'interno di una scala assoluta in quanto non è normalizzata e il suo valore dipende dalle osservazioni coinvolte. Si ricava perciò da questo indice il **coefficiente di correlazione lineare campionaria**, anche detto indice di correlazione di Pearson, che si indica con $\rho$.
+
+Possiamo standardizzare il valore della covarianza campionaria dividendolo per il prodotto delle due deviazioni standard campionarie delle due variabili:
+$$
+\rho =\dfrac{\displaystyle \sum^n_{i=1} (x_i - \bar{x})(y_i - \bar{y})}{(n-1)s_x s_y}
+$$
+Il coefficiente di correlazione di Pearson è quindi un numero puro e, proprio come la covarianza campionaria, quando $\rho > 0$ i dati sono correlati positivamente, mentre quando $\rho < 0$ sono correlati negativamente.
+Non dipendendo dalle unità di misura, questo indice può essere usato per comparare dataset diversi.
+
+Una proprietà importante è che vale $-1 \le \rho \le 1$.
+
+#### **Relazione deterministica**
+
+Come **primo caso** vogliamo passare da una relazione tendenziale a una deterministica, nella quale la variabile $y$ è una trasformazione lineare della variabile $x$; tutti i vari indici statistici variano di conseguenza:
+$$
+\forall i \;\; y_i = a + b x_i \quad \Rightarrow \quad \bar{y} = a + b \bar{x} \quad \Rightarrow \quad s_y^2 = b^2 s_x^2 \quad \Rightarrow \quad s_y = |\, b\, | s_x
+$$
+Nella relazione deterministica $y = a + bx$, la costante $b$ rappresenta la pendenza della retta che lega le due variabili e indica di quanto varia $y$ all'aumentare di $x$. possiamo aspettarci: 
+
+- Se $b$ è positivo, all'aumento di $x$ corrisponde un incremento di $y \Rightarrow$ relazione diretta
+- Se $b$ è negativo, all'aumento di $x$ corrisponde un decremento di $y \Rightarrow$ relazione inversa
+
+Si calcoli ora il coefficiente di correlazione di Pearson:
+$$
+\rho = \dfrac{b \sum_{i=1}^n (x_i - \bar{x})^2}{(n-1)\,|\, b \,|\, s_x^2} =
+	\dfrac{b}{|\, b \,|} \cdot \dfrac{1}{s_x^2} \dfrac{\sum_{i=1}^n (x_i - \bar{x})^2}{n-1} = \dfrac{b}{|\, b \,|} \cdot \dfrac{1}{\cancel{s_x^2}} \cancel{s_x^2}
+	= \dfrac{b}{|\, b \,|} \;\;= \;\;
+    \begin{cases}
+		+1 & \text{se } b>0 \\
+		-1 & \text{se } b < 0
+    \end{cases}
+$$
+Questo significa che:
+
+- l'indice $\rho$ è uguale a $+1$ se $b$ è una costante positiva, e se quindi le due variabili esibiscono una relazione di tipo deterministica diretta.
+- l'indice $\rho$ è uguale a $-1$ se $b$ è una costante negativa, e se quindi le due variabili esibiscono una relazione di tipo deterministica indiretta
+
+Le conclusioni ottenute con i calcoli rispecchiano le nostre attese iniziali.
+
+Come **secondo caso** consideriamo una relazione in cui entrambi le variabili $x$ e $y$ sono soggette ad una trasformazione lineare, i vari indici statistici variano nel seguente modo:
+$$
+\forall i \quad
+\begin{aligned}
+x'_i &= a + bx_i \quad \Rightarrow \quad \bar{x}' = a + b\bar{x} \quad \Rightarrow \quad s_{x'} = |\, b\,|\, s_x \quad \Rightarrow \quad x'_i - \bar{x}' = b(x_i - \bar{x}) \\
+y'_i &= c + dy_i \,\quad \Rightarrow \quad \bar{y}' = c + d\bar{x} \quad \Rightarrow \quad s_{y'} = |\, d\,|\, s_y \quad \Rightarrow \quad y'_i - \bar{y}' = d(y_i - \bar{y})
+\end{aligned}
+$$
+Procediamo a calcolare il coefficiente di correlazione di Pearson:
+$$
+\rho' = \dfrac{\sum_{i=1}^n (x'_i - \bar{x}')(y'_i - \bar{y}')}{(n-1) s_x' s_y'} =
+	\dfrac{b\, d\, \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{(n-1)\, |\,b\,|\, |\,d\,|\, s_x s_y} = 
+	\dfrac{b\, d}{|\, b\, |\, |\, d\,|} \rho \;\;=\;\;
+    \begin{cases}
+		+\rho & \text{se } b \text{ concorda con }d \\
+		-\rho & \text{se } b \text{ discorda con }d
+    \end{cases}
+$$
+Ciò significa che la correlazione tra $x'$ e $y'$ rimane numericamente invariata rispetto a quella tra $x$ e $y$ e può eventualmente cambiare solo di segno:
+
+- se i coefficienti di trasformazione $b$ e $d$ hanno lo stesso segno allora $\rho' = \rho$
+- se i coefficienti di trasformazione $b$ e $d$ hanno segni diversi allora $\rho' = -\rho$
+
+\newpage
+#### **Conclusioni**
+
+Il coefficiente di correlazione di Pearson è un indicatore fondamentale per valutare la forza e la direzione di una relazione, o associazione, di tipo lineare tra due variabili, con valori che spaziano fra $-1$ e $+1$.
+
+**Relazione deterministica** Quando due variabli presentano una relazione lineare deterministica $y = a + bx$, il coefficiente di correlazione assume valore estremo: $\rho = +1$ se $b > 0$ e $\rho = -1$ se $b < 0$, in altre parole se tutti i punti che giacciono esattamente su una retta crescente o decrescente, la correlazione è massima o minima.
+
+**Relazione tendenziale** Nella maggior parte dei casi reali, le due variabili seguono una relazione lineare tendenziale. In questo contesto, il valore assoluto del coefficente di correlazione $|\rho|$, fornisce una misura di quanto le osservazioni si dispongano in prossimità di una retta:
+
+- $|\rho| = 1$ evidenzia una perfetta relazione lineare, cioè è possibile collegare tutti i valori $(x_i,y_i)$ con $i = 1, \cdots,n$ con una retta.
+- Più $|\rho|$ si avvicina a 1 e più i dati esibiscono una relazione lineare forte, anche se non perfetta: ciò significa che se anche non esiste una retta che attraversa tutti i valori dei dati, ce n'è una che passa vicino a tutti.
+- Se $|\rho|$ è prossimo allo 0, non c'è evidenza di un legame lineare tra le variabili.
+
+Il segno di $\rho$ indica invece la direzione della relazione, se è positivo allora l'approssimazione lineare è crescente (diretta) mentre è negativo quando l'approssimazione lineare è decrescente (inversa).
+
+È importante tenere a mente che un valore di $\rho = 0$ non implica automaticamente l'assenza di qualsiasi relazione, poichè potrebbero esistere legami non lineari che questo indice non è in grado di cogliere.
+
+Vale inoltre la pena sottolineare che il coefficiente di correlazione di Pearson non implica in alcun modo un rapporto causa-effetto tra le due variabili prese in considerazione, cioè due variabili possono presentare un valore di correlazione elevato senza che una determini o causi l'altra. Spesso infatti può intervenire un terzo fatto, o più fattori, a influenzare entrambe le variabili, generando un legame che in realtà non corrisponde a un meccanismo causale diretto.
+
+## **Indici di eterogeneità**
+
+Sappiamo che per le variabili qualitative nominali non è possibile calcolare la varianza nè gli indici che ne derivano, perchè non esistono una media, una mediana o altri valori numerici di riferimento su cui misurare le distanze. Ma è necessario avere un indice che misuri la dispersione della distribuzione delle frequenze, detta **eterogeneità**. In particolare si dice che una variabile è distribuita in modo eterogeneo quando ogni suo valore compare con la stessa frequenza.
+
+### **Indice di Gini**
+
+Consideriamo un campione ${x_1, \cdots, x_n}$ in cui occorrono i valori distinti $v_1, \cdots, v_m$ e indichiamo con $f_j$ la frequenza relativa dell'elemento $v_j$ per $j = 1, \cdots, m$. Definiamo l'**indice di eterogenità di Gini** come:
+$$
+I = 1 - \sum_{j=1}^m f_j^2
+$$
+Una proprietà importante di questo indice è che vale $0 \le I < 1$ ed inoltre l'omogeneità massima dell'insieme di dati si presenta quando $I = 0$, mentre l'eteregeneità massima quando $I = 1$. Di conseguenza, all'aumentare dell'indice di Gini aumenta l'eterogeneità.
+
+Per dimostrare le limitazioni inferiori e superiori, ricordiamo che trattandosi di frequenze relative, vale $0 \le f_j \le 1 \;\; \forall j \in [1,m]$ ed inoltre vale $\sum_{j=1}^m f_j = 1$. Di conseguenza si avrà:
+
+- per almeno un $j$ si ha $\displaystyle f_j > 0 \Rightarrow f_j^2 > 0 \Rightarrow \sum_{j=1}^m f_j^2 > 0 \quad \Rightarrow \quad I < 1$
+- per ogni $j$, dato che $0 \le f_j \le 1$, si ha che $\displaystyle f_j^2 \le f_j \Rightarrow \sum_{j=1}^m f_j^2 \le \sum_{j=1}^m f_j = 1 \quad \Rightarrow \quad I \ge 0$
+
+Notiamo che l'estremo inferiore si presenta quando l'insieme è massimamente omogeneo e l'estremo superiore quando è massimamente eterogeno, quindi:
+
+- l'eterogeneità minima la si ha quando tutti gli elementi hanno lo stesso valore, quindi
+    $\displaystyle \exists\, k \in \left[ 1, m\right]\; |\; f_k = 1, \; \forall j \not = k \;\; f_j = 0 \quad \Rightarrow \quad I = 1 - \sum_{j=1}^m f_j^2 = 1 - f_k^2 = 1 - 1 = 0$
+- l'eterogeneità massima la si ha quando tutti gli elementi hanno la stessa frequenza, quindi
+    $\displaystyle \forall j \in \left[ 1,m \right] \;\; f_j = \frac{1}{m} \quad \Rightarrow \quad I = 1 - \sum_{j=1}^m f_j^2 = 1 - \sum_{j-1}^m \frac{1}{m^2} = 1 - \frac{1}{m} = \frac{m-1}{m} \;\; \to 1 \text{ al crescere di }m$
+
+#### **Indice di Gini normalizzato**
+
+Ricordiamo che $m$ è la cardinalità dell'insieme dei valori distinti. Questo indice presenta due problematiche:
+
+- il valore massimo che può assumere, ossia quando l'insieme è massimamente eterogeneo, è $(m-1)/m. Di conseguenza, specialmente nel caso in cui non si conosca il valore $m$, non si può sapere quanto questo indice debba tendere a 1 affinchè si abbia la massima eterogeneità nell'insieme dei dati.
+- il suo vaore dipende fortemente dal valore di *m*. Non è quindi possibile confrontare due attributi qualitativi che presentano intervalli di valori diversi, ovvero $m$ diverso.
+
+Per eliminare questi problemi introduciamo l'**indice di Gini normalizzato**, che si ottiene dividendo l'indice di Gini per il valore massimo $(m - 1)/m$ che può assumere:
+$$
+I' = \dfrac{m \cdot I}{m-1}
+$$
+Questo indice può assumere anche 1 come valore: $0 \le I' \le 1$. Consideriamo infattti il caso in cui l'eterogeneità dell'insieme è massima:
+$$
+I = \dfrac{m-1}{m} \quad \Rightarrow \quad I' = \dfrac{m \cdot I}{m-1} = \dfrac{m \cdot (m-1)}{(m-1) \cdot m} = 1
+$$
+
+### **Indice di entropia**
+
+Consideriamo un campione ${x_1, \cdots, x_n}$ in cui occorrono i valori distinti $v_1, \cdots, v_m$ e indichiamo con $f_j$ la frequenza relativa dell'elemento $v_j$ per $j = 1, \cdots, m$. Possiamo definire l'**indice di entropia** del campione come:
+$$
+H = \sum_{j=1}^m f_j \log \dfrac{1}{f_j} = - \sum_{j=1}^m f_j \log f_j
+$$
+La funzione $I(p) = \log 1/p = -\log p$ è detta *autoinformazione* e misura la quantità di informazione ottenuta dal verificarsi di un vento con probabilità $p$. In altre parole, misura quanto viene ridotta l'incertezza una volta che sappiamo che l'evento si è effettivamente realizzato. Questa funzione è monotona decrescente, vale 0 quando $p = 1$ e tende a infinito per $p$ tendente a 0.
+
+Nel calcolo dell'entropia compare $-f_j \log f_j$. Se $f_j = 0$ questa espressione assume la forma indeterminata $0 \cdot \infty$. Però possiamo estendere la definizione di entropia anche nei casi in cui alcune frequenze relative siano nulle.
+Valutando il limite $\displaystyle \lim_{f_j \to 0^+} -f_j \log f_j = 0$ si definisce per convenzione $- 0 \log 0 = 0$.
+
+Effettuiamo le seguenti osservazioni:
+
+- $\forall j$ vale $-f_j \log f_j \ge 0 \;\; \Rightarrow \;\; H \ge 0$
+- $\forall j$ si ha che $-f_j \log f_j = 0 \;\; \Leftrightarrow \;\; f_j = 0 \lor  \log f_j = 0 \text{ e quindi } f_j =1$. Pertanto $H=0$ se e solo se ci si trova in condizione di massima omogeneità, e quindi tutti i dati del campione assumono lo stesso valore.
+- in caso di invece massima eterogeneità si avrà $f_j = 1/m$ e quindi 
+    $$
+    H = \sum_{j=1}^m \dfrac{1}{m} \log m = m \left(\dfrac{1}{m} \log m \right) =  \log m
+    $$
+    Si può dimostrare che in questo caso l'entropia assume il valore massimo.
+
+Una proprietà importante di questo indice è che vale $0 \le H \le \log m$. Più questo indice cresce più aumenta il grado di eterogeneità dell'insieme e vale il viceversa più decresce più aumenta il grado di omogeneità.
+
+#### **Indice di entropia normalizzato**
+
+Definiamo l'**indice di entropia normalizzato** come:
+$$
+H' = \dfrac{H}{\log m}
+$$
+I valori di questo indice sono compresi tra $0$ e $1$, infatti nel caso di massima eterogeneità si ha che:
+$$
+H = \log m \quad \Rightarrow \quad H' = \dfrac{\log m}{\log m} = 1
+$$
+Nel nostro caso è utile avere il logaritmo in base 2 in modo da poter misurare l'entropia di bit, che risulta utile quando bisogna svolgere i calcoli in un computer, ma volendo si può utilizzare una qualsiasi base, come il logaritmo naturale o in base 10.
 
 \newpage
 # \Large\textbf{\textcolor{red}{Formulario}}
