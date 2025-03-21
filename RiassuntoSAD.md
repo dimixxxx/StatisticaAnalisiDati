@@ -880,6 +880,215 @@ H = \log m \quad \Rightarrow \quad H' = \dfrac{\log m}{\log m} = 1
 $$
 Nel nostro caso è utile avere il logaritmo in base 2 in modo da poter misurare l'entropia di bit, che risulta utile quando bisogna svolgere i calcoli in un computer, ma volendo si può utilizzare una qualsiasi base, come il logaritmo naturale o in base 10.
 
+### **Alberi di decisione**
+
+Gli indici di eterogeneità oltre ad misurare la dispersione delle frequenze nelle variabili qualitative, sono fondamentali anche nella costruzione degli alberi di decisione. In un albero di decisione, ogni oggetto da classificare è descritto da un vettore di attributi e la classificazione avviene valutando, partendo dalla radice, condizioni sui valori di tali attributi.
+
+In pratica, ad ogni nodo viene associata una condizione/test che suddivide il campione in sottoinsiemi: si segue il percorso corrispondente in base al risultato del test, fino al raggiungimento di una foglia, la quale indica la classe assegnata. La scelta del test in ciascun nodo è guidata proprio dagli indici di eterogeneità; l'obbiettivo è quello di ridurre l'eterogeneità dei dati nei nodi figli rispetto a quella del nodo padre. Si cerca quindi di porre condizioni ai vari nodi per ottenere dei sottogruppi il più omogenei possibili e con il minor numero di nodi possibili.
+
+Ad esempio, tramite l'indice di Gini si seleziona la condizione che minimizza l'indice nei gruppi risultanti, cioè quella che porta a sottoinsiemi in cui la distribuzione delle classi è il più possibile concentrata in una sola categoria. Analogamente se si usa l'indice di Entropia si cerca la divisione che riduce al minimo l'incertezza nei nodi successivi. In entrambi i casi procedento lungo l'albero si raggiungono foglie contenenti gruppi di oggetti più omogenei rispetto alla classe di appartenenza. 
+
+In questo modo l'impiedo degli indici di eterogeneità consente di valutare quantitativamente la bontà delle suddivisioni, contribuendo a costruire alberi di decisione efficaci per il compito di classificazione.
+
+## **Concentrazione**
+
+Le misure di concentrazione sono strumenti statistici che consentono di comprendere come una determinata risorsa/bene, come la ricchezza, sia distribuita all'interno di una popolazione. In questo modo è possibile valutare se tale risorsa sia distribuita in maniera equa tra gli individui oppure se risulta concentrata in un numero ristretto di individui.
+
+Mentre la varianza quantifica la dispersione dei singoli valori rispetto alla media, gli indici di concentrazione mettono in evidenza se una piccola parte della popolazione detiene una quota sproporzionata del bene considerato.
+
+Consideriamo un campione di *n* osservazioni, ciascuno dei quali possiene una certa quantità di risorse. inchiamo con $a_i$ la quantità posseduta dall'*i*-esimo individuo dopo aver ordinato le osservazioni in ordine crescente, cioè $a_1 \le a_2 \le \cdots \le a_n$. Il valore medio della risorsa è definito come $\bar{a} = 1/n \sum_{i=1}^n a_i$, dove la sommatoria rappresenta la somma di tutte le dotazioni individuali. Andando a moltiplicare il valore medio $\bar{a}$ per il numero totale di individui *n* ottieniamo il totale aggregato della risorsa: 
+$$
+TOT = n\, \bar{a} = \sum_{i=1}^n a_i
+$$
+Qui la somma viene effettuata su tutte le osservazioni $a_1, a_2, \cdots, a_n$ cioè su tutte le dotazioni della risorsa in esame. L'ordinamento crescente serve per facilitare l'analisi della distribuzione della risorsa fra gli individui, come vederemo tramite la curva di Lorenz.
+
+Possono presentarsi due situzioni estreme:
+
+- Caso di concentrazione minima: tutti gli elementi del campione assumono lo stesso valore, cioè $a_1 = a_2 = \cdots = a_n = \bar{a}$
+- Caso di concentazione massima: tutti gli elementi del campione assumono valore pari a 0, tranne uno: $a_1 = a_2 = \cdots = a_{n-1} = 0$ e $a_n = n\bar{a}$
+
+È necessario avere un indice di concentrazione che valga 0 e 1 nei casi rispettivi di concentrazione minima e massima, e che negli altri casi sia un valore crescente in funzione della concentrazione. Si considerino:
+
+- La frequenza relativa cumulata degli individui fino all'*i*-esima osservazione:
+    $$
+    F_i = \dfrac{i}{n} \;\; \text{ per } i=1,\cdots,n \qquad \small \text{\% degli inidividui}
+    $$
+- La quantità relativa cumulata fino all'*i*-esima osservazione:
+    $$
+    Q_i = \dfrac{1}{TOT} \sum_{k=1}^i a_k \qquad \text{\small \% della ricchezza}
+    $$
+
+Queste due quantità possiedono le seguenti proprietà:
+
+- $0 \le F_i, Q_i \le 1$
+- $Q_i = F_i$ in caso di concentrazione minima
+- $Q_n = F_n = 1$
+- $Q_i \le F_i$ siccome le osservazioni sono in ordine crescente
+
+**Dimostrazione**
+
+Vogliamo dimostrare che $Q_i \le F_i$. Pertanto andiamo a dividere l'insieme ordinato in due sottogruppi, $\{a_1, \cdots, a_i\}$ e $\{a_{i+1}, \cdots, a_n\}$ e definiamo le rispettive somme $S_i$ e $T_i$:
+
+$\displaystyle S_i = \sum_{k=1}^i a_k \qquad T_i = \sum_{k=i+1}^n a_k \qquad TOT = S_i + T_i = S_n$
+
+Riscriviamo la disuguaglianza $Q_i \le F_i$ in termini di $S_i$ e $T_i$, in particolare, osserviamo che 
+
+$\displaystyle Q_i = \dfrac{S_i}{TOT} \le \dfrac{i}{n} \;\; \Longleftrightarrow \;\; \dfrac{S_i}{S_i + T_i} \le \dfrac{i}{n}$
+
+Da quest'ultima forma, vogliamo isolare da un lato della disequazione $\tfrac{i\, T_i}{S_i}$:
+
+$\dfrac{S_i}{S_i + T_i} \le \dfrac{i}{n} \;\; \Rightarrow \;\; \dfrac{1}{1+\tfrac{T_i}{S_i}} \le \dfrac{i}{n} \;\; \Rightarrow \;\; 1+\dfrac{T_i}{S_i} \ge \dfrac{n}{i} \;\; \Rightarrow \;\; i \roundp{\dfrac{T_i}{S_i}} \ge i \roundp{\dfrac{n}{i} - 1} \;\; \Rightarrow \;\; \dfrac{i\, T_i}{S_i} \ge n - 1$
+
+\newpage
+Si scompone ora il termine $\tfrac{i\, T_i}{S_i}$ come somma sugli elementi $a_k$ con $k > i$:
+
+$\displaystyle \dfrac{i\, T_i}{S_i} = \dfrac{i}{S_i} \sum_{k=i+1}^n a_k = \sum_{k=i+1}^n \dfrac{i\, a_k}{S_i}$
+
+Questa rielaborazione ci permette di sfruttare l'ordinamento $a_k \ge a_i \;\; \forall i < k$. Infatti, se $a_k \ge a_i$, allora:
+
+$\dfrac{i\, a_k}{S_i} = \dfrac{\overbrace{a_k + a_k + \cdots + a_k\,\rule[0.8ex]{0pt}{1ex}}^{\raisebox{0.5ex}{\mbox{i volte}}}}{a_1 + a_2 + \cdots + a_k} \;\; \ge 1$
+
+Ne consegue che
+
+$\displaystyle \dfrac{i\, T_i}{S_i} = \sum_{k=i+1}^n \dfrac{i\, a_k}{S_i} \ge \sum_{k=i+1}^n 1 = n - (i+1) + 1 = n - i$
+
+In tal modo si conclude che $\tfrac{i\, T_i}{S_i} \ge n - i$. Poiché $n-i \ge n-1$ quando $i \ge 1$, abbiamo dunque dimostrato
+
+$\dfrac{i\, T_i}{S_i} \ge n-1 \;\; \Rightarrow \;\; Q_i \le F_i$
+
+\begin{center}
+    \rule{0.5\textwidth}{1pt}
+\end{center}
+
+Per $i = 1, \cdots, n$ le coppie ($F_i, Q_i$) indicano che il $100F_i%$ della popolazione detiene il $100Q_i%$ della quantità considerata. Consideriamo ora i punti sul piano che sono indicati da queste coppie.
+
+```{=latex}
+\vspace{1mm}
+\hspace{-0.9em}\begin{minipage}[c]{0.44\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        xmin=0, xmax=1,
+        ymin=0, ymax=1,
+        width=6.75cm, height=5.75cm,
+        xlabel={$F_i$},
+        ylabel={$Q_i\;\;\;$},
+        xlabel style={
+            at={(axis description cs:0.5,-0.135)},
+            anchor=north,
+        },
+        y label style={
+            rotate=-90,
+            anchor=center,
+        },
+        grid=major,
+        grid style={dashed,gray!30},
+        xtick={0,0.125,0.25,0.375,0.5,0.625,0.75,0.875,1},
+        xticklabels={$\hspace{-1.7em} 0$, $\frac{1}{n}$, $\frac{2}{n}$, $$, \raisebox{-1.5ex}{$\dots$}, $$, $\frac{n-2}{n}$, $\frac{n-1}{n}$, $1$},
+        ytick={0,0.125,0.25,0.375,0.5,0.625,0.75,0.875,1},
+        yticklabels={$$, $\frac{1}{n}$, $\frac{2}{n}$, $$, $\dots$, $$, $\frac{n-2}{n}$, $\frac{n-1}{n}$, $1$},
+        yticklabel style={anchor=center, xshift=-1.1em},
+    ]
+    \addplot [
+        color=black,
+        thick,
+        mark=*,
+        mark options={color=gray!100!black, fill=gray!100!black}
+    ] coordinates {
+        (0,0) (0.125,0.125) (0.25,0.25) (0.375,0.375) (0.5,0.5) (0.625,0.625) (0.75,0.75) (0.875,0.875) (1,1)
+    };
+    \end{axis}
+    \end{tikzpicture}
+\end{minipage}
+\begin{minipage}[l]{0.56\textwidth}
+\vspace{-3em}
+\textbf{Concentrazione minima}\quad Nel caso di concentrazione minima tutti i punti $(F_i, Q_i)$ giacciono sulla retta $F=Q$: si può dunque dire che in questo caso $F_i - Q_i = 0$ per ogni $i$.
+\\[0.7em]
+
+\raggedright
+\makebox[0pt][l]{%
+\hspace{-1mm}$\displaystyle
+\begin{array}{l@{\ =\ }c@{,\,}c@{,\,}c@{,\,}l@{\;\;\;}l}
+a_i 
+  & \bar{a} 
+  & \cdots 
+  & \bar{a} 
+  & \bar{a} 
+  & \quad a_i = \bar{a} \quad \forall i = 1,\dots,n 
+\\[1mm]
+Q_i 
+  & \tfrac{\bar{a}}{TOT}
+  & \cdots
+  & \tfrac{(n-1)\bar{a}}{TOT}
+  & \tfrac{n\,\bar{a}}{TOT}
+  & \quad Q_i = \dfrac{i\,\bar{a}}{TOT} = \dfrac{i\,\bar{a}}{n\,\bar{a}} = \dfrac{i}{n} = F_i
+\end{array}
+$%
+}
+\end{minipage}
+
+
+\hspace{-0.9em}\begin{minipage}[c]{0.44\textwidth}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        xmin=0, xmax=1,
+        ymin=0, ymax=1,
+        width=6.75cm, height=5.75cm,
+        xlabel={$F_i$},
+        ylabel={$Q_i\;\;\;$},
+        xlabel style={
+            at={(axis description cs:0.5,-0.135)},
+            anchor=north,
+        },
+        y label style={
+            rotate=-90,
+            anchor=center,
+        },
+        grid=major,
+        grid style={dashed,gray!30},
+        xtick={0,0.125,0.25,0.375,0.5,0.625,0.75,0.875,1},
+        xticklabels={$\hspace{-1.7em} 0$, $\frac{1}{n}$, $\frac{2}{n}$, $$, \raisebox{-1.5ex}{$\dots$}, $$, $\frac{n-2}{n}$, $\frac{n-1}{n}$, $1$},
+        ytick={0,0.125,0.25,0.375,0.5,0.625,0.75,0.875,1},
+        yticklabels={$$, $\frac{1}{n}$, $\frac{2}{n}$, $$, $\dots$, $$, $\frac{n-2}{n}$, $\frac{n-1}{n}$, $1$},
+        yticklabel style={anchor=center, xshift=-1.1em},
+    ]
+    \addplot [
+        color=black,
+        thick,
+        mark=*,
+        mark options={color=gray!100!black, fill=gray!100!black}
+    ] coordinates {
+        (0,0) (0.125,0) (0.25,0) (0.375,0) (0.5,0) (0.625,0) (0.75,0) (0.875,0) (1,1)
+    };
+    \addplot [
+        domain=0:1,
+        dashed,
+        black,
+        thin,
+    ] {x};
+    \end{axis}
+    \end{tikzpicture}
+\end{minipage}
+\begin{minipage}[l]{0.56\textwidth}
+\vspace{-2.2em}
+\textbf{Concentrazione massima}\quad Nel caso di concentrazione \mbox{massima} tutti i punti \((F_i, Q_i)\) giacciono sulla retta \(Q=0\), tranne per l'ultimo in cui $F_n = Q_n$: dunque in questo caso \(F_i - Q_i = F_i\) per \(i=1, \cdots, n-1\) e $F_n - Q_n = 0$.
+\\[0.7em]
+
+\makebox[0pt][l]{%
+\hspace{-1mm}$\displaystyle
+\begin{array}{l@{\ =\ }c@{,\,}c@{,\quad}c@{,\quad}c@{,\,}l@{}l}
+a_i & 0 & 0 & \cdots & 0 & TOT \\[1mm]
+Q_i & 0 & 0 & \cdots & 0 & 1 \\[1mm]
+F_i & \dfrac{1}{n} & \dfrac{2}{n} & \cdots & \dfrac{n-1}{n} & 1
+\end{array}
+$%
+}
+\end{minipage}
+\vspace{1mm}
+```
+Nei casi intermedi si avrà dunque che i punti staranno su una curva sotto la bisettrice del I° e III° quadrante $F=Q$, cado che $Q_i \le F_i$ per qualsiasi $i = 1, \cdots, n$. Più la curva si avvicina alla bisettrice e più la concentrazione è bassa, mentre più si allontana e più la concentrazione è altra.
+
 \newpage
 # \Large\textbf{\textcolor{red}{Formulario}}
 
