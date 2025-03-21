@@ -9,4 +9,4 @@ Python per la Statistica: applicare la statistica con Python, con esempi di util
 Comando CMD per generazione PDF da markdown:
 pandoc RiassuntoSAD.md -o RiassuntoSAD.pdf --pdf-engine=xelatex -H header.tex
 
-Si ringrazia Kevin per la disponibilità dei suoi fantastici appunti :3 
+Si ringrazia il Sommo Kevin per la disponibilità dei suoi fantastici appunti :3 
